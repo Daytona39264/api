@@ -66,6 +66,7 @@ class DingoServiceProvider extends ServiceProvider
             $this->commands([
                 \Dingo\Api\Console\Command\Cache::class,
                 \Dingo\Api\Console\Command\Routes::class,
+                \Dingo\Api\Console\Command\GitFetch::class,
             ]);
         }
     }
