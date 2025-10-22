@@ -52,6 +52,8 @@ class DingoServiceProvider extends ServiceProvider
 
         $this->app->register(HttpServiceProvider::class);
 
+        $this->app->register(McpServiceProvider::class);
+
         $this->registerExceptionHandler();
 
         $this->registerDispatcher();
@@ -102,6 +104,7 @@ class DingoServiceProvider extends ServiceProvider
             'api.limiting' => \Dingo\Api\Http\RateLimit\Handler::class,
             'api.transformer' => \Dingo\Api\Transformer\Factory::class,
             'api.url' => \Dingo\Api\Routing\UrlGenerator::class,
+            'api.mcp' => \Dingo\Api\Mcp\Mcp::class,
             'api.exception' => [\Dingo\Api\Exception\Handler::class, \Dingo\Api\Contract\Debug\ExceptionHandler::class],
         ];
 

@@ -188,6 +188,30 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | MCP Transports
+    |--------------------------------------------------------------------------
+    |
+    | Model Context Protocol (MCP) transports configuration. Define your
+    | MCP servers and their connection settings here. Supported transport
+    | types include 'http' for HTTP/HTTPS connections.
+    |
+    */
+
+    'mcp' => [
+        'transports' => [
+            'klavis-strata' => [
+                'type' => 'http',
+                'url' => 'https://strata.klavis.ai/mcp/?strata_id=3befb976-1fc9-4ff0-9e87-a173b12657c6',
+                'options' => [
+                    'timeout' => 30,
+                    'verify' => true,
+                ],
+            ],
+        ],
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
     | Response Transformer
     |--------------------------------------------------------------------------
     |
