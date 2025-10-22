@@ -90,4 +90,64 @@ class GitServiceTest extends BaseTestCase
         $this->assertArrayHasKey('error', $result);
         $this->assertArrayHasKey('exit_code', $result);
     }
+
+    public function testPullThrowsExceptionForNonRepository()
+    {
+        $this->expectException(RuntimeException::class);
+        $this->expectExceptionMessage('is not a git repository');
+
+        $this->gitService->pull('/path/that/does/not/exist');
+    }
+
+    public function testCommitThrowsExceptionForNonRepository()
+    {
+        $this->expectException(RuntimeException::class);
+        $this->expectExceptionMessage('is not a git repository');
+
+        $this->gitService->commit('/path/that/does/not/exist', 'Test commit');
+    }
+
+    public function testPushThrowsExceptionForNonRepository()
+    {
+        $this->expectException(RuntimeException::class);
+        $this->expectExceptionMessage('is not a git repository');
+
+        $this->gitService->push('/path/that/does/not/exist');
+    }
+
+    public function testPullReturnsArrayWithExpectedKeys()
+    {
+        // Test pull returns proper structure (may fail if no remote configured)
+        $result = $this->gitService->pull(__DIR__ . '/../..');
+
+        $this->assertIsArray($result);
+        $this->assertArrayHasKey('success', $result);
+        $this->assertArrayHasKey('output', $result);
+        $this->assertArrayHasKey('error', $result);
+        $this->assertArrayHasKey('exit_code', $result);
+    }
+
+    public function testCommitReturnsArrayWithExpectedKeys()
+    {
+        // Test commit returns proper structure (will fail if nothing to commit)
+        $result = $this->gitService->commit(__DIR__ . '/../..', 'Test commit message');
+
+        $this->assertIsArray($result);
+        $this->assertArrayHasKey('success', $result);
+        $this->assertArrayHasKey('output', $result);
+        $this->assertArrayHasKey('error', $result);
+        $this->assertArrayHasKey('exit_code', $result);
+    }
+
+    public function testPushReturnsArrayWithExpectedKeys()
+    {
+        // Test push returns proper structure (may fail if no remote configured)
+        $result = $this->gitService->push(__DIR__ . '/../..');
+
+        $this->assertIsArray($result);
+        $this->assertArrayHasKey('success', $result);
+        $this->assertArrayHasKey('output', $result);
+        $this->assertArrayHasKey('error', $result);
+        $this->assertArrayHasKey('exit_code', $result);
+    }
 }

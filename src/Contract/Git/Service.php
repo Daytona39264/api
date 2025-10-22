@@ -26,6 +26,37 @@ interface Service
     public function fetch($path, array $options = []);
 
     /**
+     * Pull from a git repository.
+     *
+     * @param string $path
+     * @param array $options
+     *
+     * @return array
+     */
+    public function pull($path, array $options = []);
+
+    /**
+     * Commit changes in a git repository.
+     *
+     * @param string $path
+     * @param string $message
+     * @param array $options
+     *
+     * @return array
+     */
+    public function commit($path, $message, array $options = []);
+
+    /**
+     * Push to a git repository.
+     *
+     * @param string $path
+     * @param array $options
+     *
+     * @return array
+     */
+    public function push($path, array $options = []);
+
+    /**
      * Get the status of a git repository.
      *
      * @param string $path

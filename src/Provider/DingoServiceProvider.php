@@ -70,6 +70,9 @@ class DingoServiceProvider extends ServiceProvider
                 \Dingo\Api\Console\Command\Routes::class,
                 \Dingo\Api\Console\Command\GitClone::class,
                 \Dingo\Api\Console\Command\GitFetch::class,
+                \Dingo\Api\Console\Command\GitPull::class,
+                \Dingo\Api\Console\Command\GitCommit::class,
+                \Dingo\Api\Console\Command\GitPush::class,
             ]);
         }
     }

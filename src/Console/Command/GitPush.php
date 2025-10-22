@@ -1,0 +1,109 @@
+<?php
+
+namespace Dingo\Api\Console\Command;
+
+use Dingo\Api\Contract\Git\Service;
+use Illuminate\Console\Command;
+
+class GitPush extends Command
+{
+    /**
+     * The name and signature of the console command.
+     *
+     * @var string
+     */
+    public $signature = 'api:git:push
+                        {path : The repository path}
+                        {--remote= : Remote to push to}
+                        {--branch= : Branch to push}
+                        {--force : Force push}
+                        {--set-upstream : Set upstream tracking}
+                        {--tags : Push all tags}
+                        {--all : Push all branches}';
+
+    /**
+     * The console command description.
+     *
+     * @var string
+     */
+    public $description = 'Push to a git repository';
+
+    /**
+     * Git service instance.
+     *
+     * @var \Dingo\Api\Contract\Git\Service
+     */
+    protected $git;
+
+    /**
+     * Create a new git push command instance.
+     *
+     * @param \Dingo\Api\Contract\Git\Service $git
+     *
+     * @return void
+     */
+    public function __construct(Service $git)
+    {
+        $this->git = $git;
+
+        parent::__construct();
+    }
+
+    /**
+     * Execute the console command.
+     *
+     * @return int
+     */
+    public function handle()
+    {
+        $path = $this->argument('path');
+
+        if (!$this->git->isRepository($path)) {
+            $this->error("The path [{$path}] is not a git repository.");
+            return 1;
+        }
+
+        $this->info("Pushing to repository: {$path}");
+
+        $options = array_filter([
+            'remote' => $this->option('remote'),
+            'branch' => $this->option('branch'),
+            'force' => $this->option('force'),
+            'set-upstream' => $this->option('set-upstream'),
+            'tags' => $this->option('tags'),
+            'all' => $this->option('all'),
+        ]);
+
+        if (!empty($options)) {
+            $this->line('Options: ' . json_encode($options));
+        }
+
+        $result = $this->git->push($path, $options);
+
+        if ($result['success']) {
+            $this->info('Push completed successfully!');
+
+            if (!empty($result['output'])) {
+                $this->line($result['output']);
+            }
+
+            if (!empty($result['error'])) {
+                $this->line($result['error']);
+            }
+
+            return 0;
+        } else {
+            $this->error('Failed to push to repository.');
+
+            if (!empty($result['error'])) {
+                $this->error($result['error']);
+            }
+
+            if (isset($result['exception'])) {
+                $this->error($result['exception']);
+            }
+
+            return 1;
+        }
+    }
+}

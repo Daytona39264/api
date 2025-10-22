@@ -90,6 +90,128 @@ class GitService implements Service
     }
 
     /**
+     * Pull from a git repository.
+     *
+     * @param string $path
+     * @param array $options
+     *
+     * @return array
+     */
+    public function pull($path, array $options = [])
+    {
+        if (!$this->isRepository($path)) {
+            throw new RuntimeException("The path [{$path}] is not a git repository.");
+        }
+
+        $command = ['git', 'pull'];
+
+        if (isset($options['remote'])) {
+            $command[] = $options['remote'];
+        }
+
+        if (isset($options['branch'])) {
+            $command[] = $options['branch'];
+        }
+
+        if (isset($options['rebase']) && $options['rebase']) {
+            $command[] = '--rebase';
+        }
+
+        if (isset($options['no-commit']) && $options['no-commit']) {
+            $command[] = '--no-commit';
+        }
+
+        if (isset($options['ff-only']) && $options['ff-only']) {
+            $command[] = '--ff-only';
+        }
+
+        return $this->executeCommand($command, $path);
+    }
+
+    /**
+     * Commit changes in a git repository.
+     *
+     * @param string $path
+     * @param string $message
+     * @param array $options
+     *
+     * @return array
+     */
+    public function commit($path, $message, array $options = [])
+    {
+        if (!$this->isRepository($path)) {
+            throw new RuntimeException("The path [{$path}] is not a git repository.");
+        }
+
+        $command = ['git', 'commit'];
+
+        if (isset($options['all']) && $options['all']) {
+            $command[] = '--all';
+        }
+
+        if (isset($options['amend']) && $options['amend']) {
+            $command[] = '--amend';
+        }
+
+        if (isset($options['no-verify']) && $options['no-verify']) {
+            $command[] = '--no-verify';
+        }
+
+        if (isset($options['author'])) {
+            $command[] = '--author';
+            $command[] = $options['author'];
+        }
+
+        $command[] = '-m';
+        $command[] = $message;
+
+        return $this->executeCommand($command, $path);
+    }
+
+    /**
+     * Push to a git repository.
+     *
+     * @param string $path
+     * @param array $options
+     *
+     * @return array
+     */
+    public function push($path, array $options = [])
+    {
+        if (!$this->isRepository($path)) {
+            throw new RuntimeException("The path [{$path}] is not a git repository.");
+        }
+
+        $command = ['git', 'push'];
+
+        if (isset($options['remote'])) {
+            $command[] = $options['remote'];
+        }
+
+        if (isset($options['branch'])) {
+            $command[] = $options['branch'];
+        }
+
+        if (isset($options['force']) && $options['force']) {
+            $command[] = '--force';
+        }
+
+        if (isset($options['set-upstream']) && $options['set-upstream']) {
+            $command[] = '--set-upstream';
+        }
+
+        if (isset($options['tags']) && $options['tags']) {
+            $command[] = '--tags';
+        }
+
+        if (isset($options['all']) && $options['all']) {
+            $command[] = '--all';
+        }
+
+        return $this->executeCommand($command, $path);
+    }
+
+    /**
      * Get the status of a git repository.
      *
      * @param string $path
