@@ -60,12 +60,16 @@ class DingoServiceProvider extends ServiceProvider
 
         $this->registerTransformer();
 
+        $this->registerGitService();
+
         $this->registerDocsCommand();
 
         if (class_exists('Illuminate\Foundation\Application', false)) {
             $this->commands([
                 \Dingo\Api\Console\Command\Cache::class,
                 \Dingo\Api\Console\Command\Routes::class,
+                \Dingo\Api\Console\Command\GitClone::class,
+                \Dingo\Api\Console\Command\GitFetch::class,
             ]);
         }
     }
@@ -166,6 +170,18 @@ class DingoServiceProvider extends ServiceProvider
     {
         $this->app->singleton('api.transformer', function ($app) {
             return new TransformerFactory($app, $this->config('transformer'));
+        });
+    }
+
+    /**
+     * Register the git service.
+     *
+     * @return void
+     */
+    protected function registerGitService()
+    {
+        $this->app->singleton(\Dingo\Api\Contract\Git\Service::class, function ($app) {
+            return new \Dingo\Api\Git\GitService();
         });
     }
 
