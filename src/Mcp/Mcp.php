@@ -65,54 +65,18 @@ class Mcp
     /**
      * Register a new transport.
      *
-     * @param string                              $name
-     * @param \Dingo\Api\Contract\Mcp\Transport $transport
-     *
-     * @return void
-     */
-    public function addTransport($name, $transport)
-    {
-        $this->transports[$name] = $transport;
-    }
-
-    /**
-     * Check if a transport is registered.
-     *
      * @param string $name
-     *
-     * @return bool
-     */
-    public function hasTransport($name)
-    {
-        return isset($this->transports[$name]);
-    }
-
-    /**
-     * Remove a transport.
-     *
-     * @param string $name
+     * @param \Dingo\Api\Contract\Mcp\Transport|callable $transport
+     *        Either a transport instance or a callable that returns a transport.
+     *        If a callable is provided, it will be invoked with the container.
      *
      * @return void
      */
-    public function removeTransport($name)
-    {
-        unset($this->transports[$name]);
-    }
-
-    /**
-     * Extend the MCP layer with a custom transport.
-     *
-     * @param string          $key
-     * @param object|callable $transport
-     *
-     * @return void
-     */
-    public function extend($key, $transport)
+    public function registerTransport($name, $transport)
     {
         if (is_callable($transport)) {
             $transport = call_user_func($transport, $this->container);
         }
-
-        $this->transports[$key] = $transport;
+        $this->transports[$name] = $transport;
     }
 }
