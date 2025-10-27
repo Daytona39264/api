@@ -205,6 +205,9 @@ return [
                 'options' => [
                     'timeout' => 30,
                     'verify' => true,
+                    'headers' => [
+                        'Authorization' => 'Bearer ' . env('KLAVIS_STRATA_API_KEY'),
+                    ],
                 ],
             ],
         ],
